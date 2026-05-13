@@ -2,6 +2,7 @@ import express, { Response, Request } from "express"
 import helmet from "helmet"
 import cookieParser from "cookie-parser"
 import compression from "compression"
+import router from "./router"
 
 import { config } from "@/config"
 
@@ -13,10 +14,8 @@ app.use(compression())
 app.use(express.json())
 app.use(express.urlencoded({extended : true}))
 
-app.get("/", (res: Response, req: Request)=>{
-    res.json("Your server is live")
-})
+
 
 app.listen(config.port,()=> {
-    console.log(`server is listening at http://localhost/${config.port}`)
+    console.log(`server is listening at http://localhost:${config.port}`)
 })
