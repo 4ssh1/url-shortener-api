@@ -5,14 +5,17 @@ import compression from "compression"
 import router from "./router"
 
 import { config } from "@/config"
+import cors from "./libs/cors"
 
 const app = express()
 
+// secure headers
 app.use(helmet());
 app.use(cookieParser());
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({extended : true}));
+app.use(cors);
 
 
 (async () => {
@@ -32,4 +35,16 @@ app.use(express.urlencoded({extended : true}));
   }
 })();
 
+const serverTerm = async(signal: NodeJS.Signals): Promise<void> => {
+    try {
+        console.log(`Received signal: ${signal}`);
+        process.exit(0);
+    } catch (error) {
+        console.error('Error occurred while shutting down:', error);
+        process.exit(1);
+    }
+}
 
+//listen for termination signals
+process.on('SIGINT', () => serverTerm('SIGINT'));
+process.on('SIGTERM', () => serverTerm('SIGTERM'));
