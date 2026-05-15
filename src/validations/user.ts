@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { config } from '@/config';
 
 export const userSignupSchema = z.object({
   firstName: z.string().min(2, 'First name must be at least 2 characters long'),
@@ -9,7 +10,17 @@ export const userSignupSchema = z.object({
     .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
     .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
     .regex(/[0-9]/, 'Password must contain at least one number')
-    .regex(/[\W_]/, 'Password must contain at least one special character')
+    .regex(/[\W_]/, 'Password must contain at least one special character'),
+  role: z.enum(['user', 'admin']).default('user')
+})
+.refine(data => {
+    if (data.role === 'admin') {
+      return config.whiteListedEmails.includes(data.email);
+    }
+    return true;
+  }, {
+    message: "You are not authorized to create an admin account.",
+    path: ["role"],
 });
 
 export const userLoginSchema = userSignupSchema.pick({
