@@ -12,7 +12,9 @@ export const config = {
     logTailSourceToken: process.env.LOG_TAIL_SOURCE_TOKEN,
     logTailSourceId: process.env.LOG_TAIL_SOURCE_ID,
     logTailIngestingHost: process.env.LOG_TAIL_INVESTING_HOST,
-    databaseUrl: process.env.DATABASE_URL,
+    databaseUrl: process.env.DATABASE_URL!,
     windowMs: oneHour,
-    whiteListedEmails: process.env.WHITELISTED_EMAIL!.split(',')
+    whiteListedEmails: process.env.WHITELISTED_EMAIL!.split(','),
+    jwtAccessSecret: process.env.JWT_ACCESS_SECRET!,
+    jwtRefreshSecret: process.env.JWT_REFRESH_SECRET!,
 }
