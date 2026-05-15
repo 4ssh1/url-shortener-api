@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser"
 import compression from "compression"
 import router from "./routes"
 import logger from "./libs/pino"
-import { connectDB } from "./libs/db"
+import { connectDB, disconnectDB } from "./libs/db"
 import { globalErrorHandler } from "@/middleware/error-handler"
 
 import { config } from "@/config"
@@ -44,6 +44,8 @@ app.use(cors);
 
 const serverTerm = async (signal: NodeJS.Signals): Promise<void> => {
   try {
+    await disconnectDB();
+
     logger.warn({ signal }, 'Process termination signal received');
 
     // This ensures all buffered logs are written to the transport (Logtail)
