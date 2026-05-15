@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser"
 import compression from "compression"
 import router from "./router"
 import logger from "./libs/pino"
+import { globalErrorHandler } from "@/middleware/error-handler"
 
 import { config } from "@/config"
 import cors from "./libs/cors"
@@ -25,6 +26,8 @@ app.use(cors);
     logger.info({ database: 'MongoDB' }, 'Database connected');
 
     app.use("/", router)
+
+    app.use(globalErrorHandler)
 
     app.listen(config.port, () => {
       logger.info({ port: config.port, env: config.nodeEnv }, 'Server is running');

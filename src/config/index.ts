@@ -11,5 +11,5 @@ export const config = {
     logTailSourceToken: process.env.LOG_TAIL_SOURCE_TOKEN,
     logTailSourceId: process.env.LOG_TAIL_SOURCE_ID,
     logTailIngestingHost: process.env.LOG_TAIL_INVESTING_HOST,
-    
+    databaseUrl: process.env.DATABASE_URL
 }
