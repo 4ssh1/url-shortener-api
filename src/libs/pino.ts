@@ -11,7 +11,7 @@ if (config.nodeEnv === 'development') {
     target: 'pino-pretty',
     options: {
       colorize: true,
-      translateTime: 'SYS:standard',
+      translateTime: 'd mmmm yyyy h:MM:ss TT',
       ignore: 'hostname,pid',
     },
   };

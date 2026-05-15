@@ -1,8 +1,9 @@
-import express, { Response, Request } from "express"
+import express from "express"
 import helmet from "helmet"
 import cookieParser from "cookie-parser"
 import compression from "compression"
 import router from "./router"
+import logger from "./libs/pino"
 
 import { config } from "@/config"
 import cors from "./libs/cors"
@@ -14,37 +15,48 @@ app.use(helmet());
 app.use(cookieParser());
 app.use(compression());
 app.use(express.json());
-app.use(express.urlencoded({extended : true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(cors);
 
 
 (async () => {
   try {
     // await db.connect();
-    console.log('Database connected');
-    app.use("/",router)
-    
+    logger.info({ database: 'MongoDB' }, 'Database connected');
+
+    app.use("/", router)
+
     app.listen(config.port, () => {
-      console.log('Server is running');
+      logger.info({ port: config.port, env: config.nodeEnv }, 'Server is running');
     });
-  } catch (error) {
-    console.error('Failed to start server', error);
-    if(config.nodeEnv === 'production') {
-      process.exit(1); // Exit with failure code in production
+  } catch (error: any) {
+    logger.error({ err: error }, 'Failed to start server');
+
+    if (config.nodeEnv === 'production') {
+      process.exit(1);
     }
   }
 })();
 
-const serverTerm = async(signal: NodeJS.Signals): Promise<void> => {
-    try {
-        console.log(`Received signal: ${signal}`);
-        process.exit(0);
-    } catch (error) {
-        console.error('Error occurred while shutting down:', error);
-        process.exit(1);
-    }
+const serverTerm = async (signal: NodeJS.Signals): Promise<void> => {
+  try {
+    logger.warn({ signal }, 'Process termination signal received');
+
+    // This ensures all buffered logs are written to the transport (Logtail)
+    logger.flush();
+
+
+    setTimeout(() => {
+      process.exit(0);
+    }, 500);
+  } catch (error) {
+    logger.error({ err: error }, 'Error occurred while shutting down');
+    logger.flush();
+
+    process.exit(1);
+  }
 }
 
-//listen for termination signals
+// listen for termination signals
 process.on('SIGINT', () => serverTerm('SIGINT'));
 process.on('SIGTERM', () => serverTerm('SIGTERM'));

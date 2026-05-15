@@ -12,6 +12,7 @@
   "license": "ISC",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/bcrypt": "^6.0.0",
     "@types/compression": "^1.8.1",
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
@@ -31,11 +32,13 @@
   "dependencies": {
     "@logtail/node": "^0.5.8",
     "@logtail/pino": "^0.5.8",
+    "bcrypt": "^6.0.0",
     "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.5.2",
     "helmet": "^8.1.0",
     "pino": "^10.3.1",
     "zod": "^4.4.3"
