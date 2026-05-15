@@ -2,7 +2,7 @@ import express from "express"
 import helmet from "helmet"
 import cookieParser from "cookie-parser"
 import compression from "compression"
-import router from "./router"
+import router from "./routes"
 import logger from "./libs/pino"
 import { connectDB } from "./libs/db"
 import { globalErrorHandler } from "@/middleware/error-handler"
@@ -26,7 +26,7 @@ app.use(cors);
     await connectDB();
     logger.info({ database: 'MongoDB' }, 'Database connected');
 
-    app.use("/", router)
+    app.use("/api/v1", router)
 
     app.use(globalErrorHandler)
 
