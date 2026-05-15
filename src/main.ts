@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser"
 import compression from "compression"
 import router from "./router"
 import logger from "./libs/pino"
+import { connectDB } from "./libs/db"
 import { globalErrorHandler } from "@/middleware/error-handler"
 
 import { config } from "@/config"
@@ -22,7 +23,7 @@ app.use(cors);
 
 (async () => {
   try {
-    // await db.connect();
+    await connectDB();
     logger.info({ database: 'MongoDB' }, 'Database connected');
 
     app.use("/", router)
