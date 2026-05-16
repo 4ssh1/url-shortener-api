@@ -6,5 +6,6 @@ const router = Router();
 
 router.post('/signup', getRateLimiter('auth'), UserController.signup);
 router.post('/login', getRateLimiter('auth'), UserController.login);
+router.post('/logout', getRateLimiter('auth') , UserController.logout);
 
 export default router;
