@@ -5,11 +5,13 @@ import { ApiResponse } from '@/util/api-response';
 import logger from '@/libs/pino';
 import { UserService } from '@/services/user';
 import { userSignupSchema, userLoginSchema } from '@/validations/user';
+import { generateAccessToken } from '@/libs/jwt';
+import { AuthenticatedRequest } from '@/interfaces/user';
 
 const COOKIE_OPTIONS = {
-  httpOnly: true,                         // Prevents client-side JS from reading the cookie (Stops XSS)
+  httpOnly: true,   // Prevents client-side JS from reading the cookie (Stops XSS)
   secure: process.env.NODE_ENV === 'production', // Forces HTTPS in production
-  sameSite: 'lax' as const,               // Protects against CSRF attacks
+  sameSite: 'lax' as const,    // Protects against CSRF attacks
   maxAge: 7 * 24 * 60 * 60 * 1000,       
 };
 
@@ -48,5 +50,22 @@ export class UserController {
     });
 
     return ApiResponse.success(res, null, 'Logged out successfully');
+  });
+
+  public static refresh = catchAsync(async (req: AuthenticatedRequest, res: Response) => {
+    logger.info('Processing access token refresh request');
+    
+    const payload = req.refreshPayload!;
+
+    const newAccessToken = generateAccessToken({
+      _id: payload._id,
+      role: payload.role,
+    });
+
+    return ApiResponse.success(
+      res, 
+      { accessToken: newAccessToken }, 
+      'Access token refreshed successfully'
+    );
   });
 }
