@@ -4,9 +4,8 @@ import { AppError } from '@/util/app-eror';
 import { HttpStatus } from '@/consts/http-status';
 import logger from '@/libs/pino';
 import { verifyAccessToken, verifyRefreshToken } from '@/libs/jwt';
-import { AuthenticatedRequest } from '@/interfaces/user';
 
-export const protect = catchAsync(async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+export const protect = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   logger.info('Running access token authentication check');
 
   let token: string | undefined;
@@ -31,7 +30,7 @@ export const protect = catchAsync(async (req: AuthenticatedRequest, res: Respons
   next();
 });
 
-export const validateRefresh = catchAsync(async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+export const validateRefresh = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   logger.info('Running refresh token validation check');
 
   const token = req.cookies?.refreshToken;
@@ -48,6 +47,10 @@ export const validateRefresh = catchAsync(async (req: AuthenticatedRequest, res:
     throw new AppError('Invalid or expired refresh token. Please log in again.', HttpStatus.UNAUTHORIZED);
   }
 
-  req.refreshPayload = { _id: decoded.id, role: decoded.role };
+  req.refreshPayload = {
+    id: decoded.sub!,
+    role: decoded.role,
+    exp: decoded.exp!
+  };
   next();
 });

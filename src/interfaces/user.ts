@@ -15,12 +15,8 @@ export interface UserPayload {
   _id: string;
   role: string;
 }
-export interface DecodedAccessToken extends JwtPayload {
-  sub: string;
+export interface DecodedToken extends JwtPayload {
+  id: string;
   role: string;
-}
-
-export interface AuthenticatedRequest extends Request {
-  user?: UserPayload;
-  refreshPayload?: UserPayload;
+  exp: number;
 }

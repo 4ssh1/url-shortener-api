@@ -1,5 +1,5 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import { UserPayload, DecodedAccessToken } from '@/interfaces/user';
+import { UserPayload, DecodedToken } from '@/interfaces/user';
 import { config } from '@/config';
 
 export const generateAccessToken = (user: UserPayload): string => {
@@ -16,9 +16,9 @@ export const generateRefreshToken = (user: UserPayload): string => {
   });
 };
 
-export const verifyAccessToken = (token: string): DecodedAccessToken | null => {
+export const verifyAccessToken = (token: string): DecodedToken | null => {
   try {
-    return jwt.verify(token, config.jwtAccessSecret) as DecodedAccessToken;
+    return jwt.verify(token, config.jwtAccessSecret) as DecodedToken;
   } catch {
     return null;
   }

@@ -53,4 +53,55 @@ export class UserService {
     logger.info({ userId: user._id }, 'User authenticated successfully');
     return { user, accessToken, refreshToken };
   }
+
+  public async logoutUser(userId: string): Promise<void> {
+    logger.info({ userId }, 'Clearing refresh token from database');
+    
+    await User.findByIdAndUpdate(userId, {
+      $set: { refreshToken: null }
+    });
+  }
+
+  public async handleSlidingWindowRefresh(userId: string, currentRefreshToken: string, tokenExp: number) {
+    logger.info({ userId }, 'Processing sliding window session refresh');
+
+    if (!userId) {
+      throw new AppError('User ID is missing for token refresh', HttpStatus.BAD_REQUEST);
+    }
+
+    const currentTime = Math.floor(Date.now() / 1000); // Convert to seconds
+    const twoDaysInSeconds = 2 * 24 * 60 * 60;
+
+    const isNearingExpiration = (tokenExp - currentTime) < twoDaysInSeconds;
+
+    const tokenPayload = { _id: userId.toString(), role: 'user' };
+    const newAccessToken = generateAccessToken(tokenPayload);
+
+    // 2. IF nearing expiration: Generate a new refresh token and WRITE to DB
+    if (isNearingExpiration) {
+      logger.info({ userId }, 'Refresh token is nearing expiration. Extending session lifespan.');
+      const newRefreshToken = generateRefreshToken(tokenPayload);
+
+      const user = await User.findByIdAndUpdate(
+        userId,
+        { $set: { refreshToken: newRefreshToken } },
+        { new: true }
+      );
+
+      if (!user) throw new AppError('User no longer exists', HttpStatus.UNAUTHORIZED);
+
+      return { user, newAccessToken, newRefreshToken, rotated: true };
+    }
+
+    // 3. ELSE: Do a simple READ check to ensure the token wasn't revoked via logout
+    const user = await User.findById(userId).select('+refreshToken');
+    
+    if (!user || user.refreshToken !== currentRefreshToken) {
+      logger.warn({ userId }, 'Refresh failed: Token is invalid or has been revoked');
+      throw new AppError('Session expired or revoked. Please log in again.', HttpStatus.UNAUTHORIZED);
+    }
+
+    // Return the current refresh token unmodified. No DB write occurred.
+    return { user, newAccessToken, newRefreshToken: currentRefreshToken, rotated: false };
+  }
 }
