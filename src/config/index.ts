@@ -17,4 +17,5 @@ export const config = {
     whiteListedEmails: process.env.WHITELISTED_EMAIL!.split(','),
     jwtAccessSecret: process.env.JWT_ACCESS_SECRET!,
     jwtRefreshSecret: process.env.JWT_REFRESH_SECRET!,
+    jwtPasswordResetSecret: process.env.JWT_PASSWORD_RESET_SECRET!,
 }

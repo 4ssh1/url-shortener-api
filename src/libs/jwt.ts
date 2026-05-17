@@ -2,6 +2,11 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import { UserPayload, DecodedToken } from '@/interfaces/user';
 import { config } from '@/config';
 
+export interface PasswordResetPayload {
+  sub: string;       // User ID
+  resetId: string;   // Single-use token identifier
+}
+
 export const generateAccessToken = (user: UserPayload): string => {
   return jwt.sign({ role: user.role }, config.jwtAccessSecret, {
     subject: user._id,
@@ -31,3 +36,15 @@ export const verifyRefreshToken = (token: string): JwtPayload | null => {
     return null;
   }
 };
+
+export const generatePasswordResetToken = (payload: PasswordResetPayload): string => {
+    return jwt.sign(payload, config.jwtPasswordResetSecret, { expiresIn: '10m' });
+  };
+
+  export const verifyPasswordResetToken = (token: string): PasswordResetPayload | null => {
+    try {
+      return jwt.verify(token, config.jwtPasswordResetSecret) as PasswordResetPayload;
+    } catch {
+      return null;
+    }
+  }

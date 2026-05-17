@@ -7,7 +7,8 @@ const router = Router();
 
 router.post('/signup', getRateLimiter('auth'), UserController.signup);
 router.post('/login', getRateLimiter('auth'), UserController.login);
-router.post('/logout', getRateLimiter('auth'), protect, UserController.logout);
-router.post('/refresh', getRateLimiter('auth'), validateRefresh, UserController.refresh);
+
+router.post('/logout', getRateLimiter('basic'), protect, UserController.logout);
+router.post('/refresh', getRateLimiter('basic'), validateRefresh, UserController.refresh);
 
 export default router;
