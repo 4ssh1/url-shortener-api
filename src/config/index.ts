@@ -18,4 +18,7 @@ export const config = {
     jwtAccessSecret: process.env.JWT_ACCESS_SECRET!,
     jwtRefreshSecret: process.env.JWT_REFRESH_SECRET!,
     jwtPasswordResetSecret: process.env.JWT_PASSWORD_RESET_SECRET!,
+    emailHost: process.env.EMAIL_HOST!,
+    emailUser: process.env.EMAIL_USER!,
+    emailPass: process.env.EMAIL_PASS!,
 }

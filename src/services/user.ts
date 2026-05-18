@@ -3,7 +3,9 @@ import { HttpStatus } from '@/consts/http-status';
 import logger from '@/libs/pino';
 import { UserSignupInput, UserLoginInput } from '@/validations/user';
 import { User } from '@/models/user';
-import { generateAccessToken, generateRefreshToken } from '@/libs/jwt';
+import { generateAccessToken, generatePasswordResetToken, generateRefreshToken, verifyPasswordResetToken } from '@/libs/jwt';
+import crypto from 'crypto';
+import { sendEmail } from '@/libs/mailer';
 
 export class UserService {
   public async createUser(data: UserSignupInput) {
@@ -103,5 +105,56 @@ export class UserService {
 
     // Return the current refresh token unmodified. No DB write occurred.
     return { user, newAccessToken, newRefreshToken: currentRefreshToken, rotated: false };
+  }
+
+  public async generatePasswordReset(email: string, originHeader: string) {
+    const user = await User.findOne({ email });
+    if (!user) {
+      logger.debug({ email }, 'Password reset requested for non-existent email');
+      return;
+    }
+
+    const resetId = crypto.randomBytes(16).toString('hex');
+
+    user.passwordResetToken = resetId;
+    await user.save();
+
+    const token = generatePasswordResetToken({
+      sub: user._id.toString(),
+      resetId: resetId,
+    });
+
+    const resetUrl = `${originHeader}/reset-password?token=${token}`;
+
+    const htmlMessage = `
+      <h1>Password Reset Request</h1>
+      <p>You requested a password reset. Click the link below to set a new password. This link is only valid for 10 minutes.</p>
+      <a href="${resetUrl}" target="_blank" style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">Reset Password</a>
+      <p>If you did not make this request, please ignore this email.</p>
+    `;
+
+    sendEmail(user.email, 'Password Reset Link (Valid for 10 mins)', htmlMessage).catch((err: Error) => {
+      logger.error({ err, userId: user._id }, 'Background password reset email failed to send');
+    });
+  }
+
+  public async executePasswordReset(token: string, newPassword: string) {
+    const decoded = verifyPasswordResetToken(token);
+    
+    if (!decoded) {
+      throw new AppError('The reset link is invalid or has expired.', HttpStatus.BAD_REQUEST);
+    }
+
+    const user = await User.findById(decoded.sub).select('+password +passwordResetToken');
+
+    if (!user || user.passwordResetToken !== decoded.resetId) {
+      throw new AppError('This reset link has already been used or is invalid.', HttpStatus.BAD_REQUEST);
+    }
+
+    user.password = newPassword;
+    user.passwordResetToken = null; 
+    
+    await user.save();
+    logger.info({ userId: user._id }, 'User password reset successfully');
   }
 }

@@ -5,7 +5,7 @@ import { ApiResponse } from '@/util/api-response';
 import logger from '@/libs/pino';
 import { UserService } from '@/services/user';
 import { userSignupSchema, userLoginSchema } from '@/validations/user';
-import { verifyRefreshToken } from '@/libs/jwt';
+import { AppError } from '@/util/app-eror';
 
 const COOKIE_OPTIONS = {
   httpOnly: true, // Prevents client-side JS from reading the cookie (Stops XSS)
@@ -97,5 +97,39 @@ export class UserController {
       },
       'Access token refreshed successfully',
     );
+  });
+
+  public static forgotPassword = catchAsync(async (req: Request, res: Response) => {
+    const { email } = req.body;
+    if (!email) {
+      return ApiResponse.badRequest(res, "Please provide an email address");
+    }
+
+    // Capture the base URL dynamically (e.g., https://yourfrontend.com)
+    const origin = req.headers.origin || `${req.protocol}://${req.get('host')}`;
+    
+    await UserController.userService.generatePasswordReset(email, origin);
+
+    return ApiResponse.success(
+      res, 
+      null, 
+      'If that email belongs to an account, a reset link has been sent.'
+    );
+  });
+
+  public static resetPassword = catchAsync(async (req: Request, res: Response) => {
+    const { token, password } = req.body;
+
+    if (!token || !password) {
+      return ApiResponse.badRequest(res, 'Token and new password are required parameters');
+    }
+
+    if (password.length < 8) {
+      return ApiResponse.badRequest(res, 'Password must be at least 8 characters long');
+    }
+
+    await UserController.userService.executePasswordReset(token, password);
+
+    return ApiResponse.success(res, null, 'Password updated successfully. You can now log in.');
   });
 }

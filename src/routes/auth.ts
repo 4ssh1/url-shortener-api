@@ -11,4 +11,7 @@ router.post('/login', getRateLimiter('auth'), UserController.login);
 router.post('/logout', getRateLimiter('basic'), protect, UserController.logout);
 router.post('/refresh', getRateLimiter('basic'), validateRefresh, UserController.refresh);
 
+router.post('/forgot-password', getRateLimiter('auth'), UserController.forgotPassword);
+router.post('/reset-password', getRateLimiter('auth'), UserController.resetPassword);
+
 export default router;
