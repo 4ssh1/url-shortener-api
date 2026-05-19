@@ -175,7 +175,7 @@ export class UserService {
     }
 
     const token = crypto.randomBytes(16).toString('hex');
-    
+
     user.passwordResetToken = {
       token,
       expiresAt: new Date(Date.now() + 10 * 60 * 1000),
@@ -312,7 +312,7 @@ export class UserService {
   public async getUserById(userId: string) {
     logger.info({ userId }, 'Fetching user by ID');
     const user = await User.findById(userId);
-    
+
     if (!user) {
       throw new AppError('User not found', HttpStatus.NOT_FOUND);
     }
@@ -326,7 +326,7 @@ export class UserService {
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { $set: updateData },
-      { new: true, runValidators: true }
+      { returnDocument: 'after', runValidators: true }
     );
 
     if (!updatedUser) {
