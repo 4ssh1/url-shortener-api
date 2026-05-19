@@ -36,15 +36,3 @@ export const verifyRefreshToken = (token: string): JwtPayload | null => {
     return null;
   }
 };
-
-export const generatePasswordResetToken = (payload: PasswordResetPayload): string => {
-    return jwt.sign(payload, config.jwtPasswordResetSecret, { expiresIn: '10m' });
-  };
-
-  export const verifyPasswordResetToken = (token: string): PasswordResetPayload | null => {
-    try {
-      return jwt.verify(token, config.jwtPasswordResetSecret) as PasswordResetPayload;
-    } catch {
-      return null;
-    }
-  }

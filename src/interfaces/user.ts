@@ -7,7 +7,10 @@ export interface IUserDocument extends UserSignupInput, Document {
   comparePassword(candidatePassword: string): Promise<boolean>;
   role: 'user' | 'admin';
   totalVisitCount: number;
-  passwordResetToken: string | null;
+  passwordResetToken: {
+    token: string;
+    expiresAt: Date;
+  } | null;
   refreshToken: string | null;
 }
 

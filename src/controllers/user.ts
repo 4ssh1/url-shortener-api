@@ -105,7 +105,7 @@ export class UserController {
       return ApiResponse.badRequest(res, "Please provide an email address");
     }
 
-    // Capture the base URL dynamically (e.g., https://yourfrontend.com)
+    // Capture the base URL dynamically
     const origin = req.headers.origin || `${req.protocol}://${req.get('host')}`;
     
     await UserController.userService.generatePasswordReset(email, origin);

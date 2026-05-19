@@ -36,7 +36,10 @@ const userSchema = new Schema<IUserDocument>(
       default: 0,
     },
     passwordResetToken: {
-      type: String,
+      type: {
+        token: { type: String, required: true },
+        expiresAt: { type: Date, required: true },
+      },
       default: null,
       select: false,
     },
