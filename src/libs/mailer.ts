@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
 export const sendEmail = async (to: string, subject: string, html: string) => {
   try {
     const mailOptions = {
-      from: config.emailUser,
+      from:` "Url Shortener" ${config.emailUser}`,
       to,
       subject,
       html,

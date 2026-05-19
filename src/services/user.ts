@@ -127,10 +127,90 @@ export class UserService {
     const resetUrl = `${originHeader}/reset-password?token=${token}`;
 
     const htmlMessage = `
-      <h1>Password Reset Request</h1>
-      <p>You requested a password reset. Click the link below to set a new password. This link is only valid for 10 minutes.</p>
-      <a href="${resetUrl}" target="_blank" style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">Reset Password</a>
-      <p>If you did not make this request, please ignore this email.</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Reset Url-shortener password</title>
+  <style>
+    /* Reset styles for email clients */
+    body, table, td, a { text-size-adjust: 100%; -webkit-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+    table { border-collapse: collapse !important; }
+    body { height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important; background-color: #f4f5f7; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+  </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f4f5f7;">
+
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td align="center" style="padding: 40px 10px 40px 10px;">
+        
+        <!-- Email Container -->
+        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 500px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden;">
+          
+          <!-- Header Banner (Optional brand accent line) -->
+          <tr>
+            <td height="4" style="background-color: #2d3748; line-height: 4px; font-size: 4px;">&nbsp;</td>
+          </tr>
+
+          <!-- Main Body Content -->
+          <tr>
+            <td align="left" style="padding: 40px 32px 40px 32px;">
+              
+              <h1 style="margin: 0 0 20px 0; font-size: 24px; font-weight: 700; line-height: 32px; color: #1a202c;">
+                Password Reset Request
+              </h1>
+              
+              <p style="margin: 0 0 32px 0; font-size: 16px; line-height: 24px; color: #4a5568;">
+                You requested a password reset. Click the button below to set a new password. This link is only valid for <strong>10 minutes</strong>.
+              </p>
+
+              <!-- Action Button Container -->
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 32px;">
+                <tr>
+                  <td align="left">
+                    <table border="0" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" bgcolor="#2d3748" style="border-radius: 6px;">
+                          <a href="${resetUrl}" target="_blank" style="display: inline-block; padding: 14px 28px; font-size: 16px; font-weight: 600; color: #ffffff; text-decoration: none; border-radius: 6px; letter-spacing: 0.5px;">
+                            Reset Password
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 0 0 24px 0;" />
+
+              <p style="margin: 0; font-size: 14px; line-height: 20px; color: #718096;">
+                If you did not make this request, you can safely ignore this email. Your password will remain unchanged.
+              </p>
+
+            </td>
+          </tr>
+          
+          <!-- Footer -->
+          <tr>
+            <td align="center" style="padding: 0 32px 40px 32px; font-size: 12px; line-height: 18px; color: #a0aec0;">
+              <p style="margin: 0;">This is an automated security notification. Please do not reply directly to this email.</p>
+            </td>
+          </tr>
+
+        </table>
+        <!-- /Email Container -->
+
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
     `;
 
     sendEmail(user.email, 'Password Reset Link (Valid for 10 mins)', htmlMessage).catch((err: Error) => {
