@@ -1,6 +1,6 @@
 import { Document } from 'mongoose';
 import { JwtPayload } from 'jsonwebtoken';
-import { UserSignupInput } from '@/validations/auth';
+import { UserSignupInput } from '@/validations/user';
 
 export type UserRole = 'user' | 'admin';
 

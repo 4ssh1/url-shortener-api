@@ -3,8 +3,8 @@ import { catchAsync } from '@/util/catch-async';
 import { validateOrThrow } from '@/util/validate-or-throw';
 import { ApiResponse } from '@/util/api-response';
 import logger from '@/libs/pino';
-import { UserService } from '@/services/auth';
-import { userSignupSchema, userLoginSchema, resetPasswordSchema } from '@/validations/auth';
+import { UserService } from '@/services/user';
+import { userSignupSchema, userLoginSchema, resetPasswordSchema, userUpdateSchema } from '@/validations/user';
 
 const COOKIE_OPTIONS = {
   httpOnly: true, // Prevents client-side JS from reading the cookie (Stops XSS)
@@ -122,5 +122,36 @@ export class UserController {
     await UserController.userService.executePasswordReset(token, password);
 
     return ApiResponse.success(res, null, 'Password updated successfully. You can now log in.');
+  });
+
+  public static getAll = catchAsync(async (req: Request, res: Response) => {
+    const users = await UserController.userService.getAllUsers();
+    return ApiResponse.success(res, users, 'Users retrieved successfully');
+  });
+
+  public static getOne = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    if (!id) return ApiResponse.badRequest(res, 'User ID parameter is required');
+
+    const user = await UserController.userService.getUserById(id as string);
+    return ApiResponse.success(res, user, 'User retrieved successfully');
+  });
+
+  public static update = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    if (!id) return ApiResponse.badRequest(res, 'User ID parameter is required');
+
+    const validatedData = validateOrThrow(userUpdateSchema, req.body);
+
+    const updatedUser = await UserController.userService.updateUserById(id as string, validatedData);
+    return ApiResponse.success(res, updatedUser, 'User updated successfully');
+  });
+
+  public static remove = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    if (!id) return ApiResponse.badRequest(res, 'User ID parameter is required');
+
+    await UserController.userService.deleteUserById(id as string);
+    return ApiResponse.success(res, null, 'User deleted successfully');
   });
 }

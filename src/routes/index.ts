@@ -1,7 +1,9 @@
 import { Router, Request, Response } from "express"
 import { ApiResponse } from "@/util/api-response"
-import authRoutes from "./auth"
 import getRateLimiter from "@/middleware/rate-limiter"
+import authRoutes from "./auth"
+import userRoutes from "./user"
+import { ro } from "zod/locales"
 
 const router = Router()
 
@@ -14,5 +16,6 @@ router.get("/", getRateLimiter('basic'), (req:Request, res:Response) => {
 }) 
 
 router.use("/auth", authRoutes);
+router.use("/users", userRoutes);
 
 export default router

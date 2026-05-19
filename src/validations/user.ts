@@ -39,3 +39,10 @@ export const resetPasswordSchema = baseUserSchema.pick({
 }).extend({
   token: z.string().min(1, 'Token is required'),
 });
+
+export const userUpdateSchema = z.object({
+  firstName: z.string().min(1, 'First name cannot be empty').optional(),
+  lastName: z.string().min(1, 'Last name cannot be empty').optional(),
+});
+
+export type UserUpdateInput = z.infer<typeof userUpdateSchema>;

@@ -4,7 +4,6 @@ import { AppError } from '@/util/app-eror';
 import { HttpStatus } from '@/consts/http-status';
 import logger from '@/libs/pino';
 import { verifyAccessToken, verifyRefreshToken } from '@/libs/jwt';
-import { UserRole } from '@/interfaces/user';
 
 export const protect = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   logger.info('Running access token authentication check');

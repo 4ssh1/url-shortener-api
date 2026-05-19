@@ -1,7 +1,7 @@
 import { AppError } from '@/util/app-eror';
 import { HttpStatus } from '@/consts/http-status';
 import logger from '@/libs/pino';
-import { UserSignupInput, UserLoginInput } from '@/validations/auth';
+import { UserSignupInput, UserLoginInput } from '@/validations/user';
 import { User } from '@/models/user';
 import {
   generateAccessToken,
@@ -10,6 +10,7 @@ import {
 import crypto from 'crypto';
 import { sendEmail } from '@/libs/mailer';
 import { UserRole } from '@/interfaces/user';
+import { UserUpdateInput } from '@/validations/user';
 
 export class UserService {
   public async createUser(data: UserSignupInput) {
@@ -301,5 +302,46 @@ export class UserService {
 
     await user.save();
     logger.info({ userId: user._id }, 'User password reset successfully');
+  }
+
+  public async getAllUsers() {
+    logger.info('Fetching all users from database');
+    return await User.find({});
+  }
+
+  public async getUserById(userId: string) {
+    logger.info({ userId }, 'Fetching user by ID');
+    const user = await User.findById(userId);
+    
+    if (!user) {
+      throw new AppError('User not found', HttpStatus.NOT_FOUND);
+    }
+    return user;
+  }
+
+  public async updateUserById(userId: string, updateData: UserUpdateInput) {
+    logger.info({ userId }, 'Updating user records');
+
+    // findByIdAndUpdate skips standard pre('save') hooks, preventing accidental password re-hashing
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $set: updateData },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      throw new AppError('User not found or update failed', HttpStatus.NOT_FOUND);
+    }
+    return updatedUser;
+  }
+
+  public async deleteUserById(userId: string) {
+    logger.info({ userId }, 'Deleting user from database');
+    const deletedUser = await User.findByIdAndDelete(userId);
+
+    if (!deletedUser) {
+      throw new AppError('User not found', HttpStatus.NOT_FOUND);
+    }
+    return deletedUser;
   }
 }
