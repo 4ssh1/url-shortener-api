@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { UserController } from '@/controllers/user';
+import { UserController } from '@/controllers/auth';
 import getRateLimiter from '@/middleware/rate-limiter';
 import { protect, validateRefresh } from '@/middleware/protect';
 

@@ -1,7 +1,7 @@
 import { AppError } from '@/util/app-eror';
 import { HttpStatus } from '@/consts/http-status';
 import logger from '@/libs/pino';
-import { UserSignupInput, UserLoginInput } from '@/validations/user';
+import { UserSignupInput, UserLoginInput } from '@/validations/auth';
 import { User } from '@/models/user';
 import {
   generateAccessToken,

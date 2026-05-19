@@ -3,8 +3,8 @@ import { catchAsync } from '@/util/catch-async';
 import { validateOrThrow } from '@/util/validate-or-throw';
 import { ApiResponse } from '@/util/api-response';
 import logger from '@/libs/pino';
-import { UserService } from '@/services/user';
-import { userSignupSchema, userLoginSchema, resetPasswordSchema } from '@/validations/user';
+import { UserService } from '@/services/auth';
+import { userSignupSchema, userLoginSchema, resetPasswordSchema } from '@/validations/auth';
 
 const COOKIE_OPTIONS = {
   httpOnly: true, // Prevents client-side JS from reading the cookie (Stops XSS)
