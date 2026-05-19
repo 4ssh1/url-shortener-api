@@ -33,3 +33,9 @@ export const userLoginSchema = baseUserSchema.pick({
 export type UserLoginInput = z.infer<typeof userLoginSchema>;
 
 export type UserSignupInput = z.infer<typeof userSignupSchema>;
+
+export const resetPasswordSchema = baseUserSchema.pick({
+  password: true,
+}).extend({
+  token: z.string().min(1, 'Token is required'),
+});

@@ -4,8 +4,7 @@ import { validateOrThrow } from '@/util/validate-or-throw';
 import { ApiResponse } from '@/util/api-response';
 import logger from '@/libs/pino';
 import { UserService } from '@/services/user';
-import { userSignupSchema, userLoginSchema } from '@/validations/user';
-import { AppError } from '@/util/app-eror';
+import { userSignupSchema, userLoginSchema, resetPasswordSchema } from '@/validations/user';
 
 const COOKIE_OPTIONS = {
   httpOnly: true, // Prevents client-side JS from reading the cookie (Stops XSS)
@@ -118,15 +117,7 @@ export class UserController {
   });
 
   public static resetPassword = catchAsync(async (req: Request, res: Response) => {
-    const { token, password } = req.body;
-
-    if (!token || !password) {
-      return ApiResponse.badRequest(res, 'Token and new password are required parameters');
-    }
-
-    if (password.length < 8) {
-      return ApiResponse.badRequest(res, 'Password must be at least 8 characters long');
-    }
+    const { token, password } = validateOrThrow(resetPasswordSchema, req.body);
 
     await UserController.userService.executePasswordReset(token, password);
 

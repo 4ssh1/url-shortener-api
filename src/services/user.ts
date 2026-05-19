@@ -9,6 +9,7 @@ import {
 } from '@/libs/jwt';
 import crypto from 'crypto';
 import { sendEmail } from '@/libs/mailer';
+import { UserRole } from '@/interfaces/user';
 
 export class UserService {
   public async createUser(data: UserSignupInput) {
@@ -101,7 +102,7 @@ export class UserService {
 
     const isNearingExpiration = tokenExp - currentTime < twoDaysInSeconds;
 
-    const tokenPayload = { _id: userId.toString(), role: 'user' };
+    const tokenPayload = { _id: userId.toString(), role: 'user' as UserRole };
     const newAccessToken = generateAccessToken(tokenPayload);
 
     // 2. IF nearing expiration: Generate a new refresh token and WRITE to DB

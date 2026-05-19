@@ -1,11 +1,12 @@
 import { Document } from 'mongoose';
-import { Request } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
 import { UserSignupInput } from '@/validations/user';
 
+export type UserRole = 'user' | 'admin';
+
 export interface IUserDocument extends UserSignupInput, Document {
   comparePassword(candidatePassword: string): Promise<boolean>;
-  role: 'user' | 'admin';
+  role: UserRole;
   totalVisitCount: number;
   passwordResetToken: {
     token: string;
@@ -16,10 +17,10 @@ export interface IUserDocument extends UserSignupInput, Document {
 
 export interface UserPayload {
   _id: string;
-  role: string;
+  role: UserRole;
 }
 export interface DecodedToken extends JwtPayload {
   id: string;
-  role: string;
+  role: UserRole;
   exp: number;
 }
