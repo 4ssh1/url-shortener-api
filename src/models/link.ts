@@ -40,4 +40,6 @@ const linkSchema = new Schema<ILinkDocument>(
   }
 );
 
+linkSchema.index({ creator: 1, createdAt: -1 });
+
 export const Link = mongoose.model<ILinkDocument>('Link', linkSchema);
