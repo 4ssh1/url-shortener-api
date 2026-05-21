@@ -56,4 +56,13 @@ export class LinkController {
 
     return ApiResponse.success(res, null, 'Short link deleted successfully');
   });
+
+  public static getAnalytics = catchAsync(async (req: Request, res: Response) => {
+    const { id: linkId } = req.params;
+    if (!linkId) throw new AppError('Link ID parameter is required', HttpStatus.BAD_REQUEST);
+    if (!req.user?._id) throw new AppError('Authentication context missing', HttpStatus.UNAUTHORIZED);
+
+    const stats = await LinkController.linkService.getLinkAnalytics(linkId as string, req.user._id);
+    return ApiResponse.success(res, stats, 'Link analytics compiled successfully');
+  });
 }
