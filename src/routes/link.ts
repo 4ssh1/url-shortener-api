@@ -11,5 +11,6 @@ router.use(getRateLimiter('basic'))
 router.post('/', LinkController.create);
 router.get('/my-links', LinkController.getMyLinks);
 router.delete('/:id', LinkController.remove);
+router.get('/:id/analytics', LinkController.getAnalytics);
 
 export default router;
