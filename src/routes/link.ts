@@ -9,7 +9,7 @@ router.use(protect);
 router.use(getRateLimiter('basic'))
 
 router.post('/', LinkController.create);
-router.get('/my-links', LinkController.getMyLinks);
+router.get('/', LinkController.getMyLinks);
 router.delete('/:id', LinkController.remove);
 router.get('/:id/analytics', LinkController.getAnalytics);
 
