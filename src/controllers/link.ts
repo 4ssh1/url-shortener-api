@@ -22,7 +22,7 @@ export class LinkController {
 
     const slug = validatedData.backHalf || crypto.randomBytes(3).toString('hex');
 
-    const shortUrl = `${req.protocol}://${req.get('host')}/api/v1/${slug}`;
+    const shortUrl = `${req.protocol}://${req.get('host')}/${slug}`;
 
     const newLink = await LinkController.linkService.createLink({
       title: validatedData.title,
