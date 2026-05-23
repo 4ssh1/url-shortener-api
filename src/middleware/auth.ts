@@ -26,7 +26,7 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
     throw new AppError('Invalid or expired token. Please authenticate again.', HttpStatus.UNAUTHORIZED);
   }
 
-  req.user = { _id: decoded.id, role: decoded.role };
+  req.user = { _id: decoded.sub!, role: decoded.role };
   next();
 });
 

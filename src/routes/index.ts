@@ -18,7 +18,7 @@ router.get("/", getRateLimiter('basic'), (req:Request, res:Response) => {
 
 router.use("/auth", authRoutes);
 router.use("/users", userRoutes);
-router.use("links", linkRoutes)
+router.use("/links", linkRoutes)
 
 router.get('/:backHalf', RedirectController.handleRedirect);
 

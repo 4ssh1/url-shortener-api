@@ -2,16 +2,16 @@ import { Link } from '@/models/link';
 import { AppError } from '@/util/app-eror';
 import { HttpStatus } from '@/consts/http-status';
 import logger from '@/libs/pino';
-import { CreateLinkInput } from '@/validations/link';
+import { ILink } from '@/interfaces/link';
 import { ILinkDocument } from '@/interfaces/link';
 import { ClickLog } from '@/models/click-log';
 import { ClickMetaData } from '@/interfaces/click-log';
 
 export class LinkService {
-  public async createLink(data: CreateLinkInput): Promise<ILinkDocument> {
+  public async createLink(data: ILink): Promise<ILinkDocument> {
     logger.info({ backHalf: data.backHalf, creator: data.creator }, 'Attempting to create a new short link');
 
-    const existingLink = await Link.findOne({ backHalf: data.backHalf });
+    const existingLink = await Link.findOne({ backHalf: data.backHalf! });
     if (existingLink) {
       logger.debug({ backHalf: data.backHalf }, 'Link creation failed: Back-half already exists');
       throw new AppError(

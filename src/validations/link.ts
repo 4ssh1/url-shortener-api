@@ -7,8 +7,7 @@ export const createLinkSchema = z.object({
     .min(1, 'Title cannot be empty'),
     
   destination: z
-    .url('Please provide a valid destination URL (e.g., https://google.com)')
-    .trim(),
+    .url('Please provide a valid destination URL (e.g., https://google.com)'),
     
   backHalf: z
     .string()

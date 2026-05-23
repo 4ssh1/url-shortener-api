@@ -1,10 +1,12 @@
 import { Types, Document } from "mongoose";
 
-export interface ILinkDocument extends Document {
+export interface ILink<T = string> {
     title: string;
     destination: string;
     backHalf: string;
     shortLink: string;
-    creator: Types.ObjectId;
-    totalVisitCount: number;
+    creator: T;
+    totalVisitCount?: number;
 }
+
+export interface ILinkDocument extends ILink<Types.ObjectId>, Document {}
