@@ -14,6 +14,7 @@ const corsOptions: CorsOptions = {
             );
         }
     },
+    credentials: true,
 };
 
 export default cors(corsOptions);
