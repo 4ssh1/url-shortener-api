@@ -17,5 +17,8 @@ export const createLinkSchema = z.object({
     .optional(), 
 });
 
+export const guestLinkSchema = createLinkSchema.pick({ destination: true, backHalf: true });
+
 export type CreateLinkInput = z.infer<typeof createLinkSchema>;
 
+export type GuestLinkInput = z.infer<typeof guestLinkSchema>;

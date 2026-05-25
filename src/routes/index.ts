@@ -5,6 +5,7 @@ import authRoutes from "./auth"
 import userRoutes from "./user"
 import linkRoutes from "./link"
 import { RedirectController } from "@/controllers/redirect"
+import { AnonymousLinkController } from '@/controllers/guest';
 
 const router = Router()
 
@@ -20,6 +21,7 @@ router.use("/auth", authRoutes);
 router.use("/users", userRoutes);
 router.use("/links", linkRoutes)
 
+router.post('/try', AnonymousLinkController.createTrial);
 router.get('/:backHalf', RedirectController.handleRedirect);
 
 export default router

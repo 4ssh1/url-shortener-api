@@ -1,24 +1,29 @@
-import { Request, Response, Router } from "express";
-import { LinkService } from "@/services/link";
-import { catchAsync } from "@/util/catch-async";
-import { HttpStatus } from "@/consts/http-status";
-import { ClickMetaData } from "@/interfaces/click-log";
+import { Request, Response } from 'express';
+import { catchAsync } from '@/util/catch-async';
+import { Link } from '@/models/link';
+import { AppError } from '@/util/app-eror';
+import { HttpStatus } from '@/consts/http-status';
+import { GuestLink } from '@/models/guest';
 
 export class RedirectController {
-  private static linkService = new LinkService();
-
   public static handleRedirect = catchAsync(async (req: Request, res: Response) => {
-    const { backHalf } = req.params;
+    const backHalf = req.params.backHalf!;
 
-    const meta = {
-      userAgent: req.headers['user-agent'],
-      referer: req.headers['referer'] || req.headers['referrer'] as string,
-      ipAddress: req.ip || req.socket.remoteAddress,
-    };
-    
-    // 1. Service finds the link, bumps totalVisitCount atomically, returns long URL
-    const destinationUrl = await RedirectController.linkService.accessAndTrackLink(backHalf as string, meta as ClickMetaData);
-    
-    return res.redirect(HttpStatus.MOVED_PERMANENTLY, destinationUrl);
+    // Check guest links first (they're temporary)
+    const guestLink = await GuestLink.findOne({ backHalf });
+    if (guestLink) {
+      return res.redirect(guestLink.destination);
+    }
+
+    // Then check registered user links
+    const link = await Link.findOne({ backHalf });
+    if (!link) {
+      throw new AppError(
+        'Link not found or has expired',
+        HttpStatus.NOT_FOUND
+      );
+    }
+
+    return res.redirect(link.destination);
   });
 }
