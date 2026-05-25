@@ -4,7 +4,7 @@ import logger from './pino';
 
 const transporter = nodemailer.createTransport({
   service: config.emailHost,
-  port: 587,
+  port: 465,
   auth: {
     user: config.emailUser, 
     pass: config.emailPass, 
@@ -25,6 +25,5 @@ export const sendEmail = async (to: string, subject: string, html: string) => {
     return info;
   } catch (error) {
     logger.error({ err: error, to }, 'Failed to send email');
-    throw error;
   }
 };
