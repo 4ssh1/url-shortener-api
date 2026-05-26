@@ -17,7 +17,7 @@ export class AnonymousLinkController {
     const validatedData = validateOrThrow(guestLinkSchema, req.body);
 
     const slug = validatedData.backHalf || crypto.randomBytes(3).toString('hex');
-    const shortUrl = `${req.protocol}://${req.get('host')}/api/v1/${slug}`;
+    const shortUrl = `${req.protocol}://${req.get('host')}/${slug}`;
 
     const guestLink = await AnonymousLinkController.anonymousService.createTrialLink(
       { ...validatedData, backHalf: slug },
