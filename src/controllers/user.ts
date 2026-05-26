@@ -9,7 +9,7 @@ import { userSignupSchema, userLoginSchema, resetPasswordSchema, userUpdateSchem
 const COOKIE_OPTIONS = {
   httpOnly: true, // Prevents client-side JS from reading the cookie (Stops XSS)
   secure: process.env.NODE_ENV === 'production', // Forces HTTPS in production
-  sameSite: 'lax' as const, // Protects against CSRF attacks
+  sameSite: 'none' as const, // REQUIRED because your frontend and backend have different domain roots
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 
