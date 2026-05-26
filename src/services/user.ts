@@ -271,7 +271,7 @@ export class UserService {
 </html>
     `;
 
-    sendEmail(
+    await sendEmail(
       user.email,
       'Password Reset Link (Valid for 10 mins)',
       htmlMessage,
