@@ -9,22 +9,14 @@ import { GuestLink } from '@/models/guest';
 
 export class AnonymousLinkService {
   public async verifyIpLimit(ipAddress: string): Promise<void> {
-    try {
-      logger.info({ ipAddress }, 'Checking anonymous trial availability for IP');
-      
-      const record = await AnonymousTracker.findOne({ ipAddress });
-      if (record) {
-        logger.debug({ ipAddress }, 'Anonymous creation rejected: IP trial already used');
-        throw new AppError(
-          'You have used your free creation. Please create a free account to shorten more links!',
-          HttpStatus.FORBIDDEN
-        );
-      }
-    } catch (error) {
-      logger.error({ error }, 'Error verifying IP limit for anonymous trial');
+    logger.info({ ipAddress }, 'Checking anonymous trial availability for IP');
+    
+    const record = await AnonymousTracker.findOne({ ipAddress });
+    if (record) {
+      logger.debug({ ipAddress }, 'Anonymous creation rejected: IP trial already used');
       throw new AppError(
-        'An unexpected error occurred while verifying your trial status. Please try again later.',
-        HttpStatus.INTERNAL_SERVER_ERROR
+        'You have used your free creation. Please create a free account to shorten more links!',
+        HttpStatus.FORBIDDEN
       );
     }
   }
