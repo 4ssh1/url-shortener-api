@@ -1,7 +1,7 @@
 import dotenv from "dotenv"
 dotenv.config()
 
-const corsWhitelist = ["https://www.postman.com/personal-team-0069/workspace/url-shortener/collection/40852797-443a4e4b-e525-4bc9-9eba-01f64c03d475?action=share&creator=40852797", "http://localhost:4200", "https://link-shortener-blond-phi.vercel.app/"]
+const corsWhitelist = ["https://www.postman.com/personal-team-0069/workspace/url-shortener/collection/40852797-443a4e4b-e525-4bc9-9eba-01f64c03d475?action=share&creator=40852797", "http://localhost:4200", "https://link-shortener-blond-phi.vercel.app"]
 const oneHour = 60 * 60 * 1000; // 1 hour in milliseconds
 
 export const config = {
