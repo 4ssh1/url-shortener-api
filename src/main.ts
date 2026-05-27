@@ -12,6 +12,8 @@ import cors from "./libs/cors"
 
 const app = express()
 
+app.set('trust proxy', 1);
+
 // secure headers
 app.use(helmet());
 app.use(cookieParser());
