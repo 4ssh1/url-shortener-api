@@ -1,21 +1,21 @@
-import nodemailer from 'nodemailer';
+import nodemailer, {TransportOptions} from 'nodemailer';
 import { config } from '@/config';
 import logger from './pino';
 
 const transporter = nodemailer.createTransport({
-  host: config.emailHost || 'smtp.gmail.com',
-  port: 587,
-  secure: false,
-  requireTLS: true,
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true, // port 465 requires secure: true
+  family: 4,    // force IPv4 — Render free tier does not support IPv6
   auth: {
     user: config.emailUser,
     pass: config.emailPass,
   },
-});
+} as TransportOptions);
 
-// Verify transporter config at startup so misconfigurations are
-// immediately visible in logs rather than silently failing later.
-transporter.verify((error, success) => {
+// Verify transporter config at startup so misconfigurations surface
+// immediately in Render logs rather than silently failing later.
+transporter.verify((error) => {
   if (error) {
     console.error('[Mailer] Transporter verification failed:', error);
     logger.error({ err: error }, 'Mailer transporter verification failed');
