@@ -1,11 +1,6 @@
 import { z } from 'zod';
 
-export const createLinkSchema = z.object({
-  title: z
-    .string({ error: 'Title is required' })
-    .trim()
-    .min(1, 'Title cannot be empty'),
-    
+export const createLinkSchema = z.object({    
   destination: z
     .url('Please provide a valid destination URL (e.g., https://google.com)'),
     
