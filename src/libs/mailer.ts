@@ -5,11 +5,12 @@ import logger from './pino';
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   port: 587,
-  secure: false, // STARTTLS — NOT SSL
+  secure: false,
   auth: {
     user: config.emailUser,
     pass: config.emailPass,
   },
+  family: 4, // force IPv4
 } as TransportOptions);
 
 transporter.verify((error) => {
