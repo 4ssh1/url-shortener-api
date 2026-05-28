@@ -9,6 +9,7 @@ import { globalErrorHandler } from "@/middleware/error-handler"
 
 import { config } from "@/config"
 import cors from "./libs/cors"
+import { RedirectController } from "./controllers/redirect"
 
 const app = express()
 
@@ -27,6 +28,8 @@ app.use(cors);
   try {
     await connectDB();
     logger.info({ database: 'MongoDB' }, 'Database connected');
+
+    app.get('/:backHalf', RedirectController.handleRedirect);
 
     app.use("/api/v1", router)
 
