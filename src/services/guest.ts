@@ -45,7 +45,6 @@ export class AnonymousLinkService {
         destination: data.destination,
         backHalf: data.backHalf!,
         shortLink,
-        title: 'Guest Link'
       });
 
       // Track the IP to prevent reuse

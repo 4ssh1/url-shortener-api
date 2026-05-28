@@ -4,7 +4,6 @@ export interface IGuestLink extends Document {
   destination: string;
   backHalf: string;
   shortLink: string;
-  title: string;
   createdAt: Date;
 }
 
@@ -22,10 +21,6 @@ const guestLinkSchema = new Schema<IGuestLink>({
   shortLink: { 
     type: String, 
     required: true 
-  },
-  title: { 
-    type: String, 
-    default: 'Guest Link' 
   },
   createdAt: { 
     type: Date, 

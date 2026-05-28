@@ -25,7 +25,6 @@ export class LinkController {
     const shortUrl = `${req.protocol}://${req.get('host')}/${slug}`;
 
     const newLink = await LinkController.linkService.createLink({
-      title: validatedData.title,
       destination: validatedData.destination,
       shortLink: shortUrl,
       creator: req.user._id,

@@ -3,11 +3,6 @@ import { ILinkDocument } from "@/interfaces/link";
 
 const linkSchema = new Schema<ILinkDocument>(
   {
-    title: {
-      type: String,
-      required: [true, 'Title is required'],
-      trim: true,
-    },
     destination: {
       type: String,
       required: [true, 'Destination URL is required'],

@@ -32,7 +32,6 @@ export class AnonymousLinkController {
           destination: guestLink.destination,
           backHalf: guestLink.backHalf,
           shortLink: guestLink.shortLink,
-          title: 'Guest Link',
           expiresIn: '5 days'
         }, 
         shortUrl: guestLink.shortLink 
