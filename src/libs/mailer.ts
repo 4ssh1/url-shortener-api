@@ -3,15 +3,14 @@ import { config } from '@/config';
 import logger from './pino';
 
 const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
+  host: 'smtp-relay.brevo.com',
   port: 587,
   secure: false,
   auth: {
-    user: config.emailUser,
-    pass: config.emailPass,
+    user: config.brevoUser,   // your Brevo login email
+    pass: config.brevoPass,   // SMTP key from Brevo dashboard (not your password)
   },
-  family: 4, // force IPv4
-} as TransportOptions);
+});
 
 transporter.verify((error) => {
   if (error) {
