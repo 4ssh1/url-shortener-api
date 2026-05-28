@@ -271,16 +271,22 @@ export class UserService {
 </html>
     `;
 
-    await sendEmail(
-      user.email,
-      'Password Reset Link (Valid for 10 mins)',
-      htmlMessage,
-    ).catch((err: Error) => {
-      logger.error(
-        { err, userId: user._id },
-        'Background password reset email failed to send',
+    try {
+      await sendEmail(
+        user.email,
+        'Password Reset Link (Valid for 10 mins)',
+        htmlMessage,
       );
-    });
+    } catch (err) {
+      user.passwordResetToken = null;
+      await user.save();
+
+      logger.error({ err, userId: user._id }, 'Password reset email failed to send');
+      throw new AppError(
+        'Failed to send reset email. Please try again later.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   public async executePasswordReset(token: string, newPassword: string) {
