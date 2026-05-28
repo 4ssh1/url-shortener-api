@@ -1,6 +1,8 @@
 # URL Shortener & Analytics API
 
-A production-grade, high-performance, and secure URL shortening microservice built with Node.js, Express, TypeScript, and MongoDB. This platform is designed to handle high-traffic link redirection with sub-millisecond tracking analytics while keeping the core database healthy and protected against common vulnerabilities.
+A production-grade, high-performance, and secure URL shortening microservice built with Node.js, Express, TypeScript, and MongoDB. This platform is designed to handle high-traffic link redirection with sub-millisecond tracking analytics while keeping the core database healthy and protected against common vulnerabilities. 
+
+**Frontend repo: https://github.com/4ssh1/url-shortener**
 
 ## 2. High-Level Architecture
 
