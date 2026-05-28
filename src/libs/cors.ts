@@ -3,7 +3,7 @@ import cors, { CorsOptions } from "cors";
 
 const corsOptions: CorsOptions = {
     origin(origin, callback) {
-        if (origin && config.corsOrigin.includes(origin)) {
+        if (!origin || config.corsOrigin.includes(origin)) {
             callback(null, true);
         } else {
             callback(
