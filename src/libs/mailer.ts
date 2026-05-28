@@ -3,7 +3,9 @@ import { config } from '@/config';
 import logger from './pino';
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail', 
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false, // STARTTLS — NOT SSL
   auth: {
     user: config.emailUser,
     pass: config.emailPass,
