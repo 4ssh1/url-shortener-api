@@ -1,11 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
-import { catchAsync } from '@/util/catch-async';
 import { AppError } from '@/util/app-eror';
 import { HttpStatus } from '@/consts/http-status';
 import logger from '@/libs/pino';
 import { verifyAccessToken, verifyRefreshToken } from '@/libs/jwt';
 
-export const protect = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+export const protect = async (req: Request, res: Response, next: NextFunction) => {
   logger.info('Running access token authentication check');
 
   let token: string | undefined;
@@ -28,9 +27,9 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
 
   req.user = { _id: decoded.sub!, role: decoded.role };
   next();
-});
+};
 
-export const validateRefresh = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+export const validateRefresh = async (req: Request, res: Response, next: NextFunction) => {
   logger.info('Running refresh token validation check');
 
   const token = req.cookies?.refreshToken;
@@ -53,4 +52,4 @@ export const validateRefresh = catchAsync(async (req: Request, res: Response, ne
     exp: decoded.exp!
   };
   next();
-});
+};
